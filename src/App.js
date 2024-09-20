@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState(() => {
-    // Load todos from local storage when the component mounts
+    // Load todos from local storage when the component mounts, or default to an empty array
     const savedTodos = localStorage.getItem("todos");
-    return savedTodos ? JSON.parse(savedTodos) : [
-      {
-        id: Math.random(),
-        text: "This is a simple todo",
-        isDone: false
-      }
-    ];
+    return savedTodos ? JSON.parse(savedTodos) : [];
   });
+
+  // Fetch todos from an API on component mount (only runs once)
+  useEffect(() => {
+    axios.get('https://mpb4ffdd0bfa321d3a50.free.beeceptor.com/todos')
+      .then(response => {
+        // Set the fetched todos into the state
+        setTodos(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching data: ", error);
+      });
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   // Save todos to local storage whenever the todos state changes
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  }, [todos]); // Runs whenever `todos` changes
 
   const addTodo = (todo) => {
     const newTodo = {
