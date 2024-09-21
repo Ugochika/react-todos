@@ -1,14 +1,26 @@
 .App {
   background-color: floralwhite;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .app {
   margin: auto;
-  padding: 0;
+  padding: 10px;
+  width: 50%;
   text-align: center;
   font-size: 17px;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  border-bottom: 1px solid #cecece;
+  border-radius: 8px;
+}
+
+input[type="text"] {
+   line-height: 25px;
+   position: relative;
+   bottom: 0;
+   left: 0;
 }
 
 .App-logo {

@@ -14,11 +14,17 @@ function App() {
   useEffect(() => {
     axios.get('https://mpb4ffdd0bfa321d3a50.free.beeceptor.com/todos')
       .then(response => {
-        // Set the fetched todos into the state
-        setTodos(response.data);
+        // Ensure the response data is an array
+        if (Array.isArray(response.data)) {
+          setTodos(response.data);
+        } else {
+          console.error("Received data is not an array:", response.data);
+          setTodos([]); // Set to an empty array to avoid errors
+        }
       })
       .catch(error => {
         console.error("Error fetching data: ", error);
+        setTodos([]); // Set to an empty array on error
       });
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
@@ -59,8 +65,9 @@ function App() {
       />
       <button onClick={() => addTodo(input)}>Add</button>
 
+      {/* Mapping over todos safely, ensuring it's an array */}
       <ul>
-        {todos.map((todo) => (
+        {(Array.isArray(todos) ? todos : []).map((todo) => (
           <li key={todo.id} className={todo.isDone ? "doneTask" : ""}>
             {todo.text}
             <button onClick={() => markTodo(todo.id)}>
