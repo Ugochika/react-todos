@@ -28,6 +28,10 @@ input[type="text"] {
   pointer-events: none;
 }
 
+.doneTask {
+  text-decoration: line-through;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

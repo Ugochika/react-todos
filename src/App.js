@@ -10,49 +10,52 @@ function App() {
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
 
+  // useEffect(() => {
+  //   localStorage.setItem("todos", JSON.stringify(todos));  
+  // }, [todos])
+
   // Fetch todos from an API on component mount (only runs once)
   useEffect(() => {
-    axios.get('https://mpb4ffdd0bfa321d3a50.free.beeceptor.com/todos')
+    axios.get('https://dummyjson.com/todos')
       .then(response => {
         // Ensure the response data is an array
-        if (Array.isArray(response.data)) {
-          setTodos(response.data);
-        } else {
-          console.error("Received data is not an array:", response.data);
-          setTodos([]); // Set to an empty array to avoid errors
-        }
+        setTodos(response.data.todos);
+        // if (Array.isArray(response.data)) {
+        //   setTodos(response.data.todos);
+        // } else {
+        //   console.error("Received data is not an array:", response.data);
+        // }
       })
       .catch(error => {
         console.error("Error fetching data: ", error);
-        setTodos([]); // Set to an empty array on error
       });
   }, []); // Empty dependency array ensures this runs only once when the component mounts
-
-  // Save todos to local storage whenever the todos state changes
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]); // Runs whenever `todos` changes
 
   const addTodo = (todo) => {
     const newTodo = {
       id: Math.random(),
-      text: todo,
-      isDone: false
+      todo: todo,
+      completed: false,
+      userId: 1
     };
-    setTodos([...todos, newTodo]);
+    const updatedTodo = [newTodo, ...todos]
+    setTodos(updatedTodo);
+    // saveToLocalStorage(updatedTodo)
     setInput("");
   };
 
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
+    // saveToLocalStorage(newTodos)
   };
 
   const markTodo = (id) => {
     const newTodos = todos.map(todo =>
-      todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+      todo.id === id ? { ...todo, completed: !todo.isDone } : todo
     );
     setTodos(newTodos);
+    // saveToLocalStorage(newTodos)
   };
 
   return (
@@ -68,10 +71,10 @@ function App() {
       {/* Mapping over todos safely, ensuring it's an array */}
       <ul>
         {(Array.isArray(todos) ? todos : []).map((todo) => (
-          <li key={todo.id} className={todo.isDone ? "doneTask" : ""}>
-            {todo.text}
+          <li key={todo.id} className={todo.completed ? "doneTask" : ""}>
+            {todo.todo}
             <button onClick={() => markTodo(todo.id)}>
-              {todo.isDone ? "Undo" : "Done"}
+              {todo.completed ? "Undo" : "Done"}
             </button>
             <button onClick={() => deleteTodo(todo.id)}>&times;</button>
           </li>
